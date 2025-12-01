@@ -7,12 +7,27 @@
         public MainPage()
         {
             InitializeComponent();
-            Termin t1 = new Termin("Kartkówka PrAM", "Na zajęciach będzie kartkówka z Pracowni aplikacji mobilnych, jako zadanie będzie przygotowanie aplikacji do zarządzania terminami", DateTime.Now, new TimeOnly(10, 20));
-            Termin t2 = new Termin("aaa", "aaa", DateTime.Now, new TimeOnly(12, 20));
-            Termin t3 = new Termin("bbb", "bbb", DateTime.Now, new TimeOnly(12, 30));
-            terminy.Add(t1);
-            terminy.Add(t2);
-            terminy.Add(t3);
+
+            String line;
+            try
+            {
+                StreamReader sr = new StreamReader("dane.txt");
+                line = sr.ReadLine();
+
+                while(line != null)
+                {
+                    String[] parts = line.Split(";");
+                    Termin t = new Termin(parts[0], parts[1], DateTime.Parse(parts[2]), TimeOnly.Parse(parts[3]));
+                    terminy.Add(t);
+
+                    line = sr.ReadLine();
+                }
+                sr.Close();
+
+            }catch (Exception e)
+            {
+                Console.WriteLine("Wystąpił problem: " + e.Message);
+            }
 
             terminTitle.Text = terminy[0].Tytul;
             terminDesc.Text = terminy[0].Opis;
